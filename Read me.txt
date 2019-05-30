@@ -1,0 +1,35 @@
+Accessing the Source Code
+Section 19, Lecture 277
+Accessing the source code
+You can access the source code of the application we’re going to build at my GitHub repository below:
+
+https://github.com/mosh-hamedani/organic-shop
+
+All the commits are named after the following lectures. So, if you want to see the exact code I’ve written in a lecture, simply look up the corresponding commit. Commits are in the exact same order as the lectures. 
+
+Alternatively, if you don’t want to use GitHub, you can download the source code for each section here. The first and last lectures in each section include the before and after source code respectively. 
+
+IMPORTANT NOTE
+The source code I’ve provided references a Firebase project that I created while recording the videos. This project no longer exists. So, in order to use the source code, you need to create your own Firebase project and store the settings in environment.ts. I’ve demonstrated the details in the lecture titled “Creating a New Project” later in this section.  
+
+
+Installations 
+Firebase:
+install: npm i --save 
+Install
++ @angular/fire@5.1.2
++ firebase@5.10.0
+
+Firebase tools
+Install Firebase tools to deploy project to firebase
+npm install -g firebase-tools
+
+
+To work with the dropdown install ng-bootstrap
+npm install --save @ng-bootstrap/ng-bootstrap
+https://ng-bootstrap.github.io/#/home
+
+
+To deploy your app to firebase follow the instructions on 19.285 or in the angular word document
+Project Console: https://console.firebase.google.com/project/shopingcart-37b6b/overview
+Hosting URL: https://shopingcart-37b6b.firebaseapp.com

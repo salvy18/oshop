@@ -1,0 +1,21 @@
+
+<app-bs-navbar></app-bs-navbar>
+<br><br><br>
+
+<main role="main" class="container">
+    <div class="starter-template">
+      <div *ngIf='ShowSpinner' class="spinner-border" role="status">
+        <br>
+        <span class="sr-only">Loading...</span>
+      </div>
+      <br>
+      <router-outlet></router-outlet>
+    </div>
+
+    <div>
+      <button
+         (click)="userService.get('')"
+          >Display user collection
+      </button>
+    </div>
+</main>

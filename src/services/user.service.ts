@@ -34,6 +34,8 @@ export class UserService {
   }
 
   get(uid: string) {
-  return 'Hola';
+  // return 'Hola';
+  //return this.db1.doc<User>('users/' + uid).valueChanges();
+  return this.db1.doc<AppUser>('users/' + uid).valueChanges();
   }
  }

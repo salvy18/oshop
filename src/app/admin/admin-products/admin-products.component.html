@@ -14,7 +14,6 @@
     <!-- <tr *ngFor="let p of productList"> Anothe way using an array-->
       <td>{{ p.title }}</td>
       <td>{{ p.price }}</td>
-      <td>{{p.id}}</td>
       <td>
         <a [routerLink]="['/admin/products/', p.id]">Edit</a>
       </td>

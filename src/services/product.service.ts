@@ -23,6 +23,10 @@ export class ProductService {
     return this.db.collection('products').doc(productId).update(product);
   }
 
+  delele(productId: string) {
+    return this.db.collection('products').doc(productId).delete();
+  }
+
   getall() {
    return this.db.collection('products').get();
 

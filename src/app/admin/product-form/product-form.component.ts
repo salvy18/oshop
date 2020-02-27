@@ -137,7 +137,13 @@ export class ProductFormComponent implements OnInit, OnDestroy {
     this.router.navigate(['admin/admin-products']);
   }
 
+  delete() {
+    if (confirm('Are you sure you want to delete this product?')) {
+      this.productService.delele(this.id);
+      this.router.navigate(['admin/admin-products']);
+    }
 
+  }
 
   ngOnDestroy(): void {
     this.serviceSubscription.unsubscribe();

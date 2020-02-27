@@ -27,7 +27,11 @@ import { AuthService } from 'src/services/auth.service';
 import { AuthGuard } from 'src/services/auth-guard.service';
 import { UserService } from 'src/services/user.service';
 import { AdminAuthGuard as AdminAuthGuard } from 'src/services/admin-auth-guard.service';
-
+import { ProductFormComponent } from './admin/product-form/product-form.component';
+import { CategoryService } from 'src/services/category.service';
+import { FormsModule } from '@angular/forms';
+import { ProductService } from 'src/services/product.service';
+import { CustomFormsModule } from 'ng2-validation';
 
 
 @NgModule({
@@ -43,7 +47,9 @@ import { AdminAuthGuard as AdminAuthGuard } from 'src/services/admin-auth-guard.
     AdminProductsComponent,
     AdminOrdersComponent,
     LoginComponent,
-    PageNotFoundComponent
+    PageNotFoundComponent,
+    ProductFormComponent,
+
   ],
   imports: [
     BrowserModule,
@@ -52,13 +58,17 @@ import { AdminAuthGuard as AdminAuthGuard } from 'src/services/admin-auth-guard.
     AngularFireDatabaseModule,
     AngularFireAuthModule,
     AngularFirestoreModule,
-    NgbModule
+    NgbModule,
+    FormsModule,
+    CustomFormsModule
   ],
   providers: [
     AuthService,
     AuthGuard,
     UserService,
-    AdminAuthGuard
+    AdminAuthGuard,
+    CategoryService,
+    ProductService
 
   ],
   bootstrap: [AppComponent]

@@ -11,6 +11,8 @@ import { AdminOrdersComponent } from 'src/app/admin/admin-orders/admin-orders.co
 import { PageNotFoundComponent } from 'src/app/page-not-found/page-not-found.component';
 import { MyOrdersComponent } from 'src/app/my-orders/my-orders.component';
 import { AuthGuard } from 'src/services/auth-guard.service';
+import { AdminAuthGuard } from 'src/services/admin-auth-guard.service';
+import { ProductFormComponent } from './admin/product-form/product-form.component';
 
 const routes: Routes = [
   // anonimous users
@@ -23,8 +25,28 @@ const routes: Routes = [
 { path: 'order-success', component: OrderSuccessComponent, canActivate: [AuthGuard]},
 { path: 'my/orders', component: MyOrdersComponent, canActivate: [AuthGuard]},
 // admin users
-{ path: 'admin/admin-products', component: AdminProductsComponent, canActivate: [AuthGuard]},
-{ path: 'admin/admin-orders', component: AdminOrdersComponent, canActivate: [AuthGuard]},
+
+// Notice that i have three of the admin/products but the more generic is the last one that is by purpuse
+{
+  path: 'admin/products/new',
+  component: ProductFormComponent,
+  canActivate: [AuthGuard, AdminAuthGuard]
+},
+{
+  path: 'admin/products/:id',
+  component: ProductFormComponent,
+  canActivate: [AuthGuard, AdminAuthGuard]
+},
+{
+  path: 'admin/admin-products',
+  component: AdminProductsComponent,
+  canActivate: [AuthGuard, AdminAuthGuard]
+},
+{
+  path: 'admin/admin-orders',
+  component: AdminOrdersComponent,
+  canActivate: [AuthGuard, AdminAuthGuard]
+},
 { path: '**', component: PageNotFoundComponent},
 ];
 

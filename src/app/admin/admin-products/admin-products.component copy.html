@@ -1,3 +1,5 @@
+ <!-- <tr *This was using an async to destroy the observable-->
+
 <p>
   <a routerLink="/admin/products/new"  class="btn btn-primary">New Product</a>
 </p>
@@ -16,7 +18,7 @@
     </tr>
   </thead>
   <tbody>
-    <tr *ngFor="let p of filteredProductList">
+    <tr *ngFor="let p of productList$ | async">
     <!-- <tr *ngFor="let p of productList"> Anothe way using an array-->
       <td>{{ p.title }}</td>
       <td>{{ p.price }}</td>

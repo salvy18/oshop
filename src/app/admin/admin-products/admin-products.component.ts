@@ -11,6 +11,7 @@ import { Products } from 'src/app/models/products';
 export class AdminProductsComponent implements OnInit, OnDestroy {
   products$: Observable<firebase.firestore.QuerySnapshot>;
   productList = new Array<Products>();
+  filteredProductList = new Array<Products>();
   productList$: Observable<Products[]>;
   productSubscription: Subscription;
 
@@ -30,13 +31,29 @@ export class AdminProductsComponent implements OnInit, OnDestroy {
             imageUrl: data.url
           };
         });
+        // This will be the list to use but we have the backup of all products in the other product list
+        this.filteredProductList = this.productList;
     });
-    // Another way which i belive its better the service return already the observable of products array
-    // and no subscription at this method but making sure to use the Asnyn pipe to destroy the observable
+    // Another way but in this case it returns directly the observable of product, however it all depends on what you want to do
+    // if you dont want to subscribe this is good method, but cannot be used for filter data with a search because you need an array
+    // this method does not need a subscription but you need to make sure to use the Asnyn pipe to destroy the observable in the html
     this.productList$ = this.productService.getall2();
    }
 
-  ngOnInit() {
+   filter(query: string) {
+     if (query) {
+       this.filteredProductList = this.productList.filter(product => product.title.toLowerCase().includes(query.toLowerCase()));
+       console.log('Filtering....');
+       console.log(this.filteredProductList);
+
+     } else {
+       this.filteredProductList = this.productList;
+       console.log('No filtering...');
+       console.log(this.productList);
+     }
+   }
+
+   ngOnInit() {
   }
 
   ngOnDestroy(): void {

@@ -21,14 +21,24 @@ export class AppComponent  {
 
     this.auth.user$.subscribe( user => {
         this.ShowSpinner = false;
-        if (user) {
-          // This will make sure to add or update this user in firebase DB
-          userService.save(user);
 
-          let returnUrl = localStorage.getItem('returnURL');
-          this.router.navigateByUrl(returnUrl);
-          // console.log( returnUrl);
-        }
+        // IF not user has been logged in then EXIT
+        if (!user) return;
+
+        // OTHERWISE This will make sure to add or update this user in firebase DB
+        userService.save(user);
+
+       // ALSO This wil make sure to redirect the user to the home page after use loged in
+        let returnUrl = localStorage.getItem('returnURL');
+      // But this needs to happen ONLY the first time, so on each refresh does not take you to the Home page
+        if (!returnUrl) return;
+
+      // Here remove the local storage and redirect the user to Home Page
+        localStorage.removeItem('returnURL');
+        this.router.navigateByUrl(returnUrl);
+
+      // console.log( returnUrl);
+
     });
   }
 }

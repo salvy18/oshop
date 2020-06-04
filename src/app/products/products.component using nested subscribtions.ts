@@ -5,7 +5,6 @@ import { Observable, Subscription } from 'rxjs';
 import { CategoryService } from 'src/services/category.service';
 import { Categories } from '../models/categories';
 import { ActivatedRoute } from '@angular/router';
-import { switchMap } from 'rxjs/operators';
 
 @Component({
   selector: 'app-products',
@@ -31,26 +30,26 @@ export class ProductsComponent implements OnDestroy {
     // this method does not need a subscription but you need to make sure to use the Asnyn pipe to destroy the observable in the html
     this.productList$ = productService.getall2();
 
-
     // This way you can handle client side filter transforming the observable to a list
-    // Noticed i am using switchmap because i am dealing with multiple observable and i want
-    // the first one to complete before it can subscribe to the next one.
-    this.productSubscription =  productService
-      .getall2().pipe(switchMap (productArray => {
+    this.productSubscription =  productService.getall2().subscribe(productArray => {
       this.productList = productArray;
-      return route.queryParamMap;
-      }))
-      .subscribe(paramMap => {
-        this.selectedCategory = paramMap.get('category');
 
-      // This is the filter mecanism. NOTICE is inside the subscribe of query param
-        this.filteredProducts = (this.selectedCategory) ?
-          this.productList.filter(p => p.category === this.selectedCategory) :
-          this.productList;
-      });
+    // This will read the query params from the URL everytime it changes
+      route.queryParamMap.subscribe(paramMap => {
+      this.selectedCategory = paramMap.get('category');
 
+    // This is the filter mecanism. NOTICE is inside the subscribe of query param
+      this.filteredProducts = (this.selectedCategory) ?
+        this.productList.filter(p => p.category === this.selectedCategory) :
+        this.productList;
+
+    });
+
+    });
 
     this.categoryList$ = categoryService.getall2();
+
+
    }
 
    ngOnDestroy(): void {

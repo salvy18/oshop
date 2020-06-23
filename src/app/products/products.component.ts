@@ -2,7 +2,6 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ProductService } from 'src/services/product.service';
 import { Products } from '../models/products';
 import { Observable, Subscription } from 'rxjs';
-import { CategoryService } from 'src/services/category.service';
 import { Categories } from '../models/categories';
 import { ActivatedRoute } from '@angular/router';
 import { switchMap } from 'rxjs/operators';
@@ -24,7 +23,7 @@ export class ProductsComponent implements OnDestroy {
   constructor(
     route: ActivatedRoute,
     productService: ProductService,
-    categoryService: CategoryService) {
+    ) {
 
     // Another way but in this case it returns directly the observable of product, however it all depends on what you want to do
     // if you dont want to subscribe this is good method, but cannot be used for client filter data with a search because you need an array
@@ -49,8 +48,6 @@ export class ProductsComponent implements OnDestroy {
           this.productList;
       });
 
-
-    this.categoryList$ = categoryService.getall2();
    }
 
    ngOnDestroy(): void {

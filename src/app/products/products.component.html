@@ -1,22 +1,6 @@
 <div class="row">
   <div class="col-3">
-    <div class="list-group">
-      <a
-        class="list-group-item list-group-item-action"
-        [class.active]="!selectedCategory"
-        routerLink="/"
-        >All Categories
-      </a>
-      <a
-        *ngFor="let c of categoryList$ | async"
-        routerLink="/"
-        [queryParams]="{ category: c.id }"
-        class="list-group-item list-group-item-action"
-        [class.active]="selectedCategory === c.id"
-        >
-        {{ c.name }}
-      </a>
-    </div>
+    <product-filter [selectedCategory]="selectedCategory"></product-filter>
   </div>
   <div class="col">
     <div class="row">
@@ -24,14 +8,11 @@
       <!-- <ng-container *ngFor="let p of productList$ | async; let i = index"> -->
       <ng-container *ngFor="let p of filteredProducts; let i = index">
         <div class="col">
-          <div class="card" style="width: 15rem;">
-            <img src="{{ p.imageUrl }}" class="card-img-top" alt="Card image cap">
-            <div class="card-body">
-              <h5 class="card-title">{{ p.title }}</h5>
-              <p class="card-text">{{ p.price | currency:'USD':true }}</p>
-              <a href="#" class="btn btn-primary">Add to chart</a>
-            </div>
-          </div>
+          <product-card
+          [product]='p'
+          [buttonDescription]="'Add to Cart'"
+          [showActions]='true'
+          ></product-card>
         </div>
         <!-- This is a line brake to brake by each two cards -->
         <div *ngIf="(i + 1) % 2 === 0" class="w-100"> </div>

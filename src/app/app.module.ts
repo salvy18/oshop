@@ -32,6 +32,8 @@ import { CategoryService } from 'src/services/category.service';
 import { FormsModule } from '@angular/forms';
 import { ProductService } from 'src/services/product.service';
 import { CustomFormsModule } from 'ng2-validation';
+import { ProductFilterComponent } from './products/product-filter/product-filter.component';
+import { ProductCardComponent } from './product-card/product-card.component';
 
 
 @NgModule({
@@ -49,6 +51,8 @@ import { CustomFormsModule } from 'ng2-validation';
     LoginComponent,
     PageNotFoundComponent,
     ProductFormComponent,
+    ProductFilterComponent,
+    ProductCardComponent,
 
   ],
   imports: [

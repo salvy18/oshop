@@ -5,13 +5,15 @@ import { Observable, Subscription } from 'rxjs';
 import { Categories } from '../models/categories';
 import { ActivatedRoute } from '@angular/router';
 import { switchMap } from 'rxjs/operators';
+import { ShoppingCartService } from 'src/services/shopping-cart.service';
+import { AngularFirestoreDocument } from '@angular/fire/firestore';
 
 @Component({
   selector: 'app-products',
   templateUrl: './products.component.html',
   styleUrls: ['./products.component.sass']
 })
-export class ProductsComponent implements OnDestroy {
+export class ProductsComponent implements OnInit, OnDestroy {
 
   productList$: Observable<Products[]>;
   productList = new Array<Products>();
@@ -19,10 +21,13 @@ export class ProductsComponent implements OnDestroy {
   categoryList$: Observable<Categories[]>;
   selectedCategory: string;
   productSubscription: Subscription;
+  shoppingCart: AngularFirestoreDocument<unknown>;
+
 
   constructor(
     route: ActivatedRoute,
     productService: ProductService,
+    private shoppingCartService: ShoppingCartService
     ) {
 
     // Another way but in this case it returns directly the observable of product, however it all depends on what you want to do
@@ -48,7 +53,20 @@ export class ProductsComponent implements OnDestroy {
           this.productList;
       });
 
+      // This is another method to get the shopping cart using the observable
+      //  shoppingCartService.getCart().then(document =>{
+      //    if (document) {
+      //     console.log('Cart in Product');
+      //     this.shoppingCart = document;
+      // }});
+
    }
+
+ async ngOnInit() {
+    this.shoppingCart = await this.shoppingCartService.getCart()
+    console.log('Product On Init');
+ 
+  }
 
    ngOnDestroy(): void {
     this.productSubscription.unsubscribe();

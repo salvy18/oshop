@@ -34,6 +34,7 @@ import { ProductService } from 'src/services/product.service';
 import { CustomFormsModule } from 'ng2-validation';
 import { ProductFilterComponent } from './products/product-filter/product-filter.component';
 import { ProductCardComponent } from './product-card/product-card.component';
+import { ShoppingCartService } from 'src/services/shopping-cart.service';
 
 
 @NgModule({
@@ -72,7 +73,8 @@ import { ProductCardComponent } from './product-card/product-card.component';
     UserService,
     AdminAuthGuard,
     CategoryService,
-    ProductService
+    ProductService,
+    ShoppingCartService
 
   ],
   bootstrap: [AppComponent]

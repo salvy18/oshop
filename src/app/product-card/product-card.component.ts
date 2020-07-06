@@ -30,6 +30,8 @@ export class ProductCardComponent implements OnDestroy, OnInit {
 
  getCartQuantity() {
   // console.log('getQuantity');
+  if (!this.userShoppingCart) return 0;
+
   let itemRef = this.userShoppingCart.collection('items').doc(this.product.id).get();
   if (itemRef) {
     this.itemSubscription = itemRef.pipe(take(1)).subscribe(item =>{
@@ -44,10 +46,17 @@ export class ProductCardComponent implements OnDestroy, OnInit {
     // this.itemSubscription.unsubscribe();
   }
 
- async addToCart(product: Products) {
-     let addedToCart = await this.cartService.addToCart( product);
+ async addToCart() {
+     let addedToCart = await this.cartService.addToCart( this.product);
 
      // On changes go ahead and get the quantities
+    this.userShoppingCart.collection('items').doc(this.product.id).valueChanges().pipe(take(1)).subscribe(onChanges =>{
+      this.getCartQuantity();
+    });
+  }
+
+ async removeFromCart() {
+    let removedToCart = await this.cartService.removeFromCart(this.product);
     this.userShoppingCart.collection('items').doc(this.product.id).valueChanges().pipe(take(1)).subscribe(onChanges =>{
       this.getCartQuantity();
     });

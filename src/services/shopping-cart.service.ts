@@ -37,34 +37,44 @@ export class ShoppingCartService {
     }
 
   async addToCart(product: Products) {
-    let cartID = await this.getOrCreateCartId();
-    let itemRef$ =  this.getItem(cartID, product.id);
-
-    itemRef$.pipe(take(1)).subscribe(item => {
-      let documentToAddOrUpdate: ShoppingCartProduct = {
-        Products : product,
-        quantity: 1
-    };
-
-      if (!item.exists) {
-       console.log('not exist');
-       // this.db.collection('shopping-carts').doc(cartID).collection('items').doc(product.id).set({Product: product, quantity: 1});
-       this.db.collection('shopping-carts').doc(cartID).collection('items').doc(product.id).set(documentToAddOrUpdate);
-      } else {
-        console.log('Exist');
-        // To locate the document and update - Two Options #1
-        this.db.collection('shopping-carts').doc(cartID).collection('items').doc(product.id).update({ quantity: item.data().quantity + 1});
-
-        // this.db.collection('shopping-carts').doc(cartID).collection('items').doc(product.id).update({ quantity: firebase.firestore.FieldValue.increment(1)});
-
-        // To locate the document and update - Two Options #2
-        // let docRef = this.db.collection('shopping-carts').doc(cartID).collection('items').doc(product.id);
-        // docRef.get().pipe(take(1)).subscribe(documentSnapshot => {
-        // documentToAddOrUpdate.quantity = documentSnapshot.data().quantity + 1;
-        // docRef.update({quantity: documentToAddOrUpdate.quantity });
-        // });
-      }
-    });
+    this.updateItemQuantity(product, 1)
   }
+
+  async removeFromCart (product: Products) {
+    this.updateItemQuantity(product, -1);
+  }
+
+private async updateItemQuantity (product: Products, change: number){
+  let cartID = await this.getOrCreateCartId();
+  let itemRef$ =  this.getItem(cartID, product.id);
+
+  itemRef$.pipe(take(1)).subscribe(item => {
+    let documentToAddOrUpdate: ShoppingCartProduct = {
+      Products : product,
+      quantity: 1
+  };
+    if (!item.exists) {
+     console.log('Item not exist');
+     // Lets create the record
+     // this.db.collection('shopping-carts').doc(cartID).collection('items').doc(product.id).set({Product: product, quantity: 1});
+     this.db.collection('shopping-carts').doc(cartID).collection('items').doc(product.id).set(documentToAddOrUpdate);
+    } else {
+      console.log('Exist');
+      // Lets locate the document and update -
+      // Option #1
+      this.db.collection('shopping-carts').doc(cartID).collection('items').doc(product.id).update({ quantity: item.data().quantity + change});
+
+      // this.db.collection('shopping-carts').doc(cartID).collection('items').doc(product.id).update({ quantity: firebase.firestore.FieldValue.increment(1)});
+
+      // Options #2
+      // let docRef = this.db.collection('shopping-carts').doc(cartID).collection('items').doc(product.id);
+      // docRef.get().pipe(take(1)).subscribe(documentSnapshot => {
+      // documentToAddOrUpdate.quantity = documentSnapshot.data().quantity + 1;
+      // docRef.update({quantity: documentToAddOrUpdate.quantity });
+      // });
+    }
+  });
+}
+
 
 }

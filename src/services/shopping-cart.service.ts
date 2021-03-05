@@ -1,9 +1,10 @@
 import { Injectable } from '@angular/core';
-import { AngularFirestore } from '@angular/fire/firestore';
+import { AngularFirestore, AngularFirestoreDocument } from '@angular/fire/firestore';
 import { Products } from 'src/app/models/products';
 import {take, map} from 'rxjs/operators';
 import * as firebase from 'firebase';
 import { ShoppingCartProduct } from 'src/app/models/shoppingcart-product';
+import { ShoppingCart } from 'src/app/models/shoppingcart';
 
 @Injectable({
   providedIn: 'root'
@@ -14,21 +15,28 @@ export class ShoppingCartService {
   }
 
   private create() {
-    return this.db.collection('shopping-carts').add({createdDate: new Date().getTime()});
+    console.log('creting the cart id');
+    return this.db.collection('shopping-carts').add({createdDate: new Date().getTime(), totalItems: 0 });
   }
 
-  async getCart() {
+  async getCart(): Promise<AngularFirestoreDocument<ShoppingCart>> {
       let cartId = await this.getOrCreateCartId();
+      console.log('returning the cart');
       return this.db.collection('shopping-carts').doc(cartId);
   }
 
   private async getOrCreateCartId(): Promise<string> {
-    let cardID = localStorage.getItem('cardID');
-    if (cardID) { return cardID; }
+    let cartID = localStorage.getItem('cartID');
+
+    if (cartID) { return cartID; };
 
     // When does not have a cart ID
     let result = await this.create();
-    localStorage.setItem('cardID', result.id);
+    localStorage.setItem('cartID', result.id);
+
+    console.log('Getting the cart');
+    console.log(cartID);
+    console.log(result.id);
     return result.id;
     }
 
@@ -48,8 +56,9 @@ private async updateItemQuantity (product: Products, change: number){
   let cartID = await this.getOrCreateCartId();
   let itemRef$ =  this.getItem(cartID, product.id);
 
+
   itemRef$.pipe(take(1)).subscribe(item => {
-    let documentToAddOrUpdate: ShoppingCartProduct = {
+  let documentToAddOrUpdate: ShoppingCartProduct = {
       Products : product,
       quantity: 1
   };
@@ -74,7 +83,18 @@ private async updateItemQuantity (product: Products, change: number){
       // });
     }
   });
+  // Update total items in Shopping Cart
+  this.updateShoppingCartTotalItem(cartID, change);
 }
 
+private updateShoppingCartTotalItem (cartID: string, change: number ) {
+  //Get a reference
+  let cartRef =  this.db.collection('shopping-carts').doc(cartID);
+  cartRef.get().pipe(take(1)).subscribe(documentSnapShot =>{
+    let totalItems = documentSnapShot.data().totalItems + change < 0 ? 0 : documentSnapShot.data().totalItems + change;
+    cartRef.update({totalItems: totalItems});
+    console.log('Totalimg');
+  });
+}
 
 }

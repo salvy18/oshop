@@ -7,6 +7,8 @@ import { ActivatedRoute } from '@angular/router';
 import { switchMap } from 'rxjs/operators';
 import { ShoppingCartService } from 'src/services/shopping-cart.service';
 import { AngularFirestoreDocument } from '@angular/fire/firestore';
+import { EventsService } from 'src/services/events.service';
+import { EventNames } from '../models/EventNames';
 
 @Component({
   selector: 'app-products',
@@ -27,8 +29,15 @@ export class ProductsComponent implements OnInit, OnDestroy {
   constructor(
     route: ActivatedRoute,
     productService: ProductService,
-    private shoppingCartService: ShoppingCartService
+    private shoppingCartService: ShoppingCartService,
+    private events:EventsService
     ) {
+
+
+      this.events.on(EventNames.ShoppingCrtCreated , cart=>{
+        this.shoppingCart = cart;
+
+       });
 
     // Another way but in this case it returns directly the observable of product, however it all depends on what you want to do
     // if you dont want to subscribe this is good method, but cannot be used for client filter data with a search because you need an array
@@ -63,9 +72,10 @@ export class ProductsComponent implements OnInit, OnDestroy {
    }
 
  async ngOnInit() {
-    this.shoppingCart = await this.shoppingCartService.getCart()
-    console.log('Product On Init');
- 
+  console.log('Product On Init');
+  // this.shoppingCart = await this.shoppingCartService.getCart()
+
+
   }
 
    ngOnDestroy(): void {

@@ -1,23 +1,28 @@
-import { Component, OnDestroy } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { AuthService } from 'src/services/auth.service';
 import { Router } from '@angular/router';
 import { UserService } from 'src/services/user.service';
 import { Observable } from 'rxjs';
+import { EventsService } from 'src/services/events.service';
+import { createViewContainerData } from '@angular/core/src/view/refs';
+import { ShoppingCartService } from 'src/services/shopping-cart.service';
+import { EventNames } from './models/EventNames';
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.sass']
 })
-export class AppComponent  {
+export class AppComponent implements OnInit  {
 
 
   title = 'oshop';
   ShowSpinner = false;
 
-
-  constructor( private auth: AuthService, private router: Router, public userService: UserService) {
+   constructor( private auth: AuthService, private router: Router, public userService: UserService, private events: EventsService, private shoppingCartService:ShoppingCartService) {
     this.ShowSpinner = true;
+
+
 
     this.auth.user$.subscribe( user => {
         this.ShowSpinner = false;
@@ -40,5 +45,17 @@ export class AppComponent  {
       // console.log( returnUrl);
 
     });
+
+
   }
+
+
+  async ngOnInit() {
+    let cart = await this.shoppingCartService.getCart();
+    this.events.broadcast(EventNames.ShoppingCrtCreated, cart);
+  }
+
+
+
 }
+
